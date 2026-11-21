@@ -1,10 +1,6 @@
 <?php
 require __DIR__ . '/../db.php';
-session_start();
-if (isset($_POST['pw']) && hash_equals($cfg['admin_password'], $_POST['pw'])) { $_SESSION['ok'] = 1; header('Location: ./'); exit; }
-if (isset($_GET['logout'])) { session_destroy(); header('Location: ./'); exit; }
-$loginFailed = isset($_POST['pw']);
-$authed = !empty($_SESSION['ok']);
+$authed = true; // akses terbuka tanpa login
 
 if ($authed && isset($_POST['del'])) {
     $id = $_POST['del'];
@@ -59,17 +55,10 @@ a.wa{color:var(--teal);text-decoration:none;font-weight:500}
 .login input{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;font:inherit}
 .login button{width:100%;margin-top:12px;padding:12px;border:0;border-radius:12px;background:var(--teal);color:#fff;font:600 15px Poppins,sans-serif;cursor:pointer}
 </style></head><body>
-<?php if (!$authed): ?>
-<form class="login" method="post">
-  <h2 style="margin-top:0">Admin</h2>
-  <?php if ($loginFailed): ?><p style="color:var(--err);margin:0 0 10px">Password salah.</p><?php endif; ?>
-  <input type="password" name="pw" placeholder="Password" autofocus>
-  <button>Masuk</button>
-</form>
-<?php else: ?>
+
 <div class="top"><div class="in">
   <div><h1>Peserta <?= h($cfg['title']) ?></h1><small><?= h($cfg['date']) ?> · <?= h($cfg['location']) ?></small></div>
-  <div><a href="?csv=1">⬇ CSV</a><a href="../" target="_blank">Lihat form</a><a href="?logout=1">Keluar</a></div>
+  <div><a href="?csv=1">⬇ CSV</a><a href="../" target="_blank">Lihat form</a></div>
 </div></div>
 <div class="wrap">
   <div class="stats">
@@ -103,5 +92,4 @@ document.getElementById('q').addEventListener('input', e => {
   document.querySelectorAll('tr.r').forEach(tr => tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none');
 });
 </script>
-<?php endif; ?>
 </body></html>
